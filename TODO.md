@@ -23,4 +23,4 @@ see `src/di/index.ts`
 
 - [x] update documentation auto injectable dependencies require explicitly to export dependencie as a function(not arrow function) or classes by default
 
-- [ ] commit previous changes and push to remote repo
+- [x] commit previous changes and push to remote repo

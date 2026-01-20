@@ -4,7 +4,7 @@ export const INJECTABLE_DEPENDENCIES = [
 	'infrastructure',
 	'use_cases',
 	'repositories',
-	'routes',
+	'presentation',
 	'services',
 ]
 
