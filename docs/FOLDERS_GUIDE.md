@@ -9,7 +9,13 @@ The dependency injection system automatically scans specific folders for modules
 The following folders are configured for auto-injection:
 
 ```typescript
-const INJECTABLE_DEPENDENCIES = ['infrastructure', 'use_cases', 'repositories', 'routes', 'services']
+const INJECTABLE_DEPENDENCIES = [
+  'infrastructure',
+  'use_cases', 
+  'repositories',
+  'presentation',
+  'services',
+]
 ```
 
 ### 1. `infrastructure/`
@@ -89,7 +95,29 @@ src/modules/routes/
 └── health.routes.ts
 ```
 
-### 5. `services/`
+### 5. `presentation/`
+
+**Purpose:** HTTP controllers, middleware, and API presentation layer
+
+**Examples:**
+- API controllers
+- Request/response middleware
+- Error handlers
+- API transformers
+
+**File Structure:**
+```
+src/modules/presentation/
+├── controllers/
+│   ├── user.controller.ts
+│   └── product.controller.ts
+├── middleware/
+│   ├── auth.middleware.ts
+│   └── validation.middleware.ts
+└── error.handler.ts
+```
+
+### 6. `services/`
 
 **Purpose:** Application services and business logic coordination
 
@@ -116,6 +144,7 @@ src/modules/
 ├── infrastructure/
 ├── use_cases/
 ├── repositories/
+├── presentation/
 ├── routes/
 └── services/
 ```
@@ -130,6 +159,7 @@ export const INJECTABLE_DEPENDENCIES = [
   'infrastructure', 
   'use_cases', 
   'repositories', 
+  'presentation',
   'routes', 
   'services',
   'your_new_folder'  // Add your new folder here

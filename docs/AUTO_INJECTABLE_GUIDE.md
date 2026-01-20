@@ -6,6 +6,24 @@ To create a module that can be automatically injected, your file must have:
 
 1. **Default Export** - The class, function, or object to be injected
 2. **Token Export** - A named export called `token` that serves as the injection token
+3. **Export Format** - Dependencies must be exported as:
+   - **Regular functions** (not arrow functions)
+   - **Classes** with `@injectable()` decorator
+   - **Objects** or configuration values
+
+## Injectable Folders
+
+The system automatically scans these folders for injectable dependencies:
+
+```typescript
+const INJECTABLE_DEPENDENCIES = [
+  'infrastructure',
+  'use_cases', 
+  'repositories',
+  'presentation',
+  'services',
+]
+```
 
 ## Examples
 
@@ -79,13 +97,14 @@ export default {
 export const token: InjectionToken<typeof databaseConfig> = 'DatabaseConfig'
 ```
 
-### Route Handler
+### Route Handler (Regular Function)
 
 ```typescript
 // src/modules/routes/user.routes.ts
 import { Router } from 'express'
 import type { InjectionToken } from 'tsyringe'
 
+// ✅ Use regular function, not arrow function
 export default function userRoutes() {
   const router = Router()
   
@@ -99,6 +118,17 @@ export default function userRoutes() {
 export const token: InjectionToken<ReturnType<typeof userRoutes>> = 'UserRoutes'
 ```
 
+### ❌ Incorrect: Arrow Function
+
+```typescript
+// ❌ This will NOT work - arrow functions are not supported
+export default const userRoutes = () => {
+  const router = Router()
+  // ...
+  return router
+}
+```
+
 ## Best Practices
 
 1. **Use descriptive tokens** - Make tokens unique and descriptive
@@ -106,6 +136,45 @@ export const token: InjectionToken<ReturnType<typeof userRoutes>> = 'UserRoutes'
 3. **Use `@injectable()` decorator** - For classes, use the tsyringe decorator
 4. **Keep files focused** - One module per file
 5. **Follow naming conventions** - Use consistent naming for files and tokens
+6. **Use regular functions** - Never use arrow functions for default exports
+7. **Place in correct folders** - Ensure files are in the injectable directories
+
+## Export Format Rules
+
+### ✅ Supported Export Types
+
+```typescript
+// 1. Regular functions
+export default function myService() {
+  return new Service()
+}
+
+// 2. Classes with decorator
+@injectable()
+export default class MyClass {
+  constructor() {}
+}
+
+// 3. Objects/Configuration
+export default {
+  key: 'value',
+  setting: true
+}
+```
+
+### ❌ Unsupported Export Types
+
+```typescript
+// 1. Arrow functions
+export default const myService = () => {
+  return new Service()
+}
+
+// 2. Anonymous exports
+export default () => {
+  // This won't work
+}
+```
 
 ## File Structure
 
@@ -125,7 +194,27 @@ src/modules/
 ├── use_cases/
 │   ├── get-user.usecase.ts
 │   └── create-user.usecase.ts
+├── presentation/
+│   ├── controllers/
+│   └── middleware/
 └── routes/
     ├── user.routes.ts
     └── product.routes.ts
 ```
+
+## System Updates
+
+The dependency injection system has been updated with:
+
+- **New injectable folder**: `presentation` added to the list
+- **Strict export requirements**: Only regular functions, classes, and objects are supported
+- **Enhanced error handling**: Better validation of export formats
+
+## How It Works
+
+1. The system scans `src/modules/` recursively
+2. It checks if the parent directory is in `INJECTABLE_DEPENDENCIES`
+3. It imports each file and extracts `default` and `token` exports
+4. It registers the dependency with tsyringe using the token
+
+If a file doesn't have both exports, it's silently skipped.

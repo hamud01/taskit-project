@@ -11,3 +11,16 @@ see `src/di/index.ts`
   const INJECTABLE_DEPENDENCIES = ['infrastructure', 'use_cases', 'repositories', 'routes', 'services']
   ```
 
+# Documentation
+
+- [x] Create ./docs folder and put all documentation *.md file into
+- [x] Document the architecture of my system  
+  - and I have separated the layers into several modules each with a 'domain' - 'application' - 'infrastructure' - 'presentation' structure
+  - all modules are in src/modules. cite modules #core, #user...
+  - src/shared groups all these common characteristics, for example Router slice abstraction (it is part of infrastructure), domain/ValueObject is the abstract value object from which all value objects inherit (at the moment it only supports strings)
+
+- [x] Document the dependencies injection system updates (add new INJECTABLE_DEPENDENCIES)
+
+- [x] update documentation auto injectable dependencies require explicitly to export dependencie as a function(not arrow function) or classes by default
+
+- [ ] commit previous changes and push to remote repo
